@@ -1,8 +1,11 @@
+import Layout from './components/Layout.jsx'
+import { Outlet } from 'react-router-dom'
+
 function App() {
- return (
-    <>
-      <h1>Hello World</h1>
-    </>
+   return ( 
+    <Layout>
+      <Outlet />
+    </Layout>
   )
 }
 
