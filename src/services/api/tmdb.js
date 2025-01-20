@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const imagePath = "https://image.tmdb.org/t/p/w500";
-export const imageOriginalPAth = "https://image.tmdb.org/t/p/original"
+export const imagePathOriginal = "https://image.tmdb.org/t/p/original"
 
 const baseUrl = "https://api.themoviedb.org/3";
 const apiKey = import.meta.env.VITE_TMDB_API_KEY;
@@ -12,7 +12,21 @@ export const fetchTrending = async (timeWindow = 'day', language = 'en-US') => {
   return data?.results;
 };
 
+
+// MOVIES AND SERIES - details
+
 export const fetchDetails = async (type, id) => {
   const res = await axios.get(`${baseUrl}/${type}/${id}?api_key=${apiKey}`);
   return res?.data;
 };
+
+// MOVIES AND SERIES - credits
+export const fetchCredits = async (type, id) => {
+  const res = await axios.get(`${baseUrl}/${type}/${id}/credits?api_key=${apiKey}`);
+  return res?.data;
+}
+
+export const fetchVideos = async (type, id) => {
+  const res = await axios.get(`${baseUrl}/${type}/${id}/videos?api_key=${apiKey}`);
+  return res?.data;
+}
