@@ -1,22 +1,21 @@
 import { Container, Heading, Grid, Flex, Box, Skeleton } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { fetchTrending } from '../services/api/tmdb.js'
-import CardComponent from '../components/CardComponent.jsx'
-
+import GridComponent from '../components/GridComponent.jsx'
 
 const Home = () => {
   const [data, setData] = useState([]);
   const [timeWindow, setTimeWindow] = useState('day');
-  const [loading , setloading ] = useState(true);
+  const [isLoading , setIsLoading ] = useState(false);
  
   useEffect(() => {
-    setloading(true);
+    setIsLoading(true);
     fetchTrending(timeWindow, 'en-US').then((res) => {
         setData(res);
       }).catch((err) => {
         console.log(err, 'err');
       }).finally(() => {
-        setloading(false);
+        setIsLoading(false);
       });
   }, [timeWindow]);
   
@@ -41,25 +40,7 @@ const Home = () => {
 
         </Flex>
       </Flex>
-
-      <Grid templateColumns={{
-        base: "1fr",
-        sm: 'repeat(2,1fr)',
-        md:'repeat(4,1fr)',
-        lg: 'repeat(5,1fr)',
-        }}
-        gap={'4'}
-      >
-        {
-          data && data?.map((item, i) => (
-            loading ? (
-            <Skeleton key={i} height="300"/>
-            ) : (
-                <CardComponent key={item?.id} item={item} type={item?.media_type}/>
-            )
-          ))
-        }
-      </Grid>
+      <GridComponent data={data} isLoading={isLoading} />
     </Container>
   )
 }

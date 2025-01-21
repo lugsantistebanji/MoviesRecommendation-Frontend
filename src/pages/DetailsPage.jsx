@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { useParams} from "react-router-dom";
 import { fetchDetails, imagePath, imagePathOriginal, fetchCredits, fetchVideos } from "../services/api/tmdb.js";
 import { Flex, Spinner,Text, Box, Container, Badge, Button, Image, CircularProgress, CircularProgressLabel, Heading} from "@chakra-ui/react";
-import { CalendarIcon, CheckCircleIcon, SmallAddIcon } from "@chakra-ui/icons";
-import { ratingToPercentage, resolveRatingColor } from '../utils/helpers.js'
+import { CalendarIcon, CheckCircleIcon, SmallAddIcon, TimeIcon } from "@chakra-ui/icons";
+import { ratingToPercentage, resolveRatingColor, fromMinutesToHours } from '../utils/helpers.js'
 import CastComponent from "../components/CastComponent.jsx";
 import VideoComponent from '../components/VideoComponent.jsx';
 
@@ -96,6 +96,14 @@ const DetailsPage = () => {
                       {new Date(releaseDate).toLocaleDateString("en-US")} (US)
                   </Text>
               </Flex>
+              {type === 'movie' && (
+                <>
+                    <Flex alignItems={'center'}>
+                      <TimeIcon mr='2' color={'gray.400'} />
+                      <Text fontSize={'sm'}>{fromMinutesToHours(details?.runtime)}</Text>
+                    </Flex>
+                </>
+              )}
             </Flex>
             <Flex alignItems={'center'} gap={'4'}>
               <CircularProgress 

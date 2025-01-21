@@ -18,21 +18,24 @@ const CastComponent = ({item}) => {
         <Image 
           src={`${imagePath}/${item?.profile_path}`}
           alt={item.name}
-          height={'100%'}
+          height={'225px'}
+          w={'100%'}
+          objectFit={'cover'}
+          borderRadius={'sm'}
         />
         <Box
           className="overlay" 
           pos={"absolute"} 
           p="0px" 
-          bottom={"1%"} 
+          bottom={"0"} 
           left={"0"} 
           w={"100%"} 
-          h={"20%"} 
+          h={"10%"} 
           bg="rgba(0,0,0,0.9)" 
           opacity={"0"} 
           transition={"opacity 0.3 ease-in-out"}
         >
-          <Text textAlign={"center"}>{item?.name}</Text>
+          <Text textAlign={"center"} fontSize={'xs'} noOfLines={1}>{item?.name}</Text>
         </Box>
       </Box>
   )

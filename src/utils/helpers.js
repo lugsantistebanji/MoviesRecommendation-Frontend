@@ -13,3 +13,14 @@ export const resolveRatingColor = (rating) => {
 
   return 'red.400';
 }
+
+export const fromMinutesToHours = (minutes) => {
+  const hours = Math.floor(minutes / 60);
+  const min = minutes % 60 ;
+  return `${hours}h ${min}m`;
+}
+
+
+export const getColor = (linkPathname, realPathname, color) => {
+  return linkPathname === realPathname ? color : ''
+} 

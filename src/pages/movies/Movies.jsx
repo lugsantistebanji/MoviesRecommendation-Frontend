@@ -1,11 +1,12 @@
-import { Container, Heading } from '@chakra-ui/react'
+import { Container, Heading } from '@chakra-ui/react';
+import DiscoversComponent from '../../components/DiscoversComponent.jsx';
 
 const Movies = () => {
+  const type = 'movie';
+
   return (
     <Container maxW={"container.xl"}>
-      <Heading as="h2" fontSize={"md"} textTransform={"uppercase"}>
-        Movies 
-      </Heading>
+      <DiscoversComponent title={'Movies'} type={type}/>
     </Container>
   )
 }
