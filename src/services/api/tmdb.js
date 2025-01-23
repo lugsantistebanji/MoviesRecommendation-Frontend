@@ -36,3 +36,15 @@ export const fetchDiscovers = async (type, page, sortBy) => {
   const res = await axios.get(`${baseUrl}/discover/${type}?page=${page}&api_key=${apiKey}&sort_by=${sortBy}`); 
   return res?.data;
 }
+
+// SEARCH
+export const searchData = async (query, page) => {
+  const res = await axios.get(`${baseUrl}/search/multi?query=${query}&page=${page}&api_key=${apiKey}`);
+  return res?.data;
+}
+
+//RECOMMENDATIONS 
+export const fetchRecommendations = async (type, id) => {
+  const res = await axios.get(`${baseUrl}/${type}/${id}/recommendations?api_key=${apiKey}`);
+  return res?.data;
+}

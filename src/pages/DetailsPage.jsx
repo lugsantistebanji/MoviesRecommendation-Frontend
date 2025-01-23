@@ -1,20 +1,22 @@
 import { useState, useEffect } from "react";
 import { useParams} from "react-router-dom";
-import { fetchDetails, imagePath, imagePathOriginal, fetchCredits, fetchVideos } from "../services/api/tmdb.js";
+import { fetchDetails, imagePath, imagePathOriginal, fetchCredits, fetchVideos, fetchRecommendations } from "../services/api/tmdb.js";
 import { Flex, Spinner,Text, Box, Container, Badge, Button, Image, CircularProgress, CircularProgressLabel, Heading} from "@chakra-ui/react";
 import { CalendarIcon, CheckCircleIcon, SmallAddIcon, TimeIcon } from "@chakra-ui/icons";
 import { ratingToPercentage, resolveRatingColor, fromMinutesToHours } from '../utils/helpers.js'
 import CastComponent from "../components/CastComponent.jsx";
 import VideoComponent from '../components/VideoComponent.jsx';
+import GridComponent from '../components/GridComponent.jsx';
 
 const DetailsPage = () => {
   const router = useParams();
   const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState({});
   const [video, setVideo] = useState(null);
-  const [videos, setVideos] = useState([])
+  const [videos, setVideos] = useState([]);
   const { type, id } = router; 
-  const [cast, setCast] = useState([])
+  const [cast, setCast] = useState([]);
+  const [data, setData] = useState([]);
 
 
 
@@ -24,10 +26,11 @@ const DetailsPage = () => {
 
     const fetchData = async () => {
       try{
-        const [detailsData, creditsData, videosData] = await Promise.all([
+        const [detailsData, creditsData, videosData, recomendationsData] = await Promise.all([
           fetchDetails(type, id),
           fetchCredits(type, id),
           fetchVideos(type, id),
+          fetchRecommendations(type, id),
         ]);
 
         setDetails(detailsData);
@@ -38,6 +41,8 @@ const DetailsPage = () => {
 
         const videos = videosData?.results?.filter((video) => video?.type != 'Trailer').slice(0, 10);
         setVideos(videos);
+
+        setData(recomendationsData?.results?.slice(0, 10));
 
       } catch (error){
         console.log(error, 'error')
@@ -167,7 +172,11 @@ const DetailsPage = () => {
             </Text>
           </Box>))}
       </Flex>
-    
+      <Heading as="h2" fontSize={'md'} textTransform={'uppercase'} mt="10" mb="7">
+          Recommendations 
+      </Heading>
+      <GridComponent data={data} isLoading={loading}/>
+
     </Container>
   </Box>
 
