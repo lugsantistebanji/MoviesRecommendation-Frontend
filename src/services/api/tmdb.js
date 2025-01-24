@@ -31,11 +31,17 @@ export const fetchVideos = async (type, id) => {
   return res?.data;
 }
 
+// KEYWORDS 
+export const fetchKeywords = async (type, id) => {
+  const res = await axios.get(`${baseUrl}/${type}/${id}/keywords?api_key=${apiKey}`);
+  return res?.data;
+}
 // DISCOVER 
 export const fetchDiscovers = async (type, page, sortBy) => {
   const res = await axios.get(`${baseUrl}/discover/${type}?page=${page}&api_key=${apiKey}&sort_by=${sortBy}`); 
   return res?.data;
 }
+
 
 // SEARCH
 export const searchData = async (query, page) => {

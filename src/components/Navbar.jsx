@@ -17,7 +17,7 @@ function Navbar() {
               letterSpacing={"widest"}
               fontFamily={"mono"}
             >
-              CinemaCreuse
+              LaVieEnCreuse
             </Box>
           </Link>
           <Flex gap="4" alignItems={"center"}>

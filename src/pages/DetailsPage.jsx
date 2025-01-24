@@ -1,23 +1,27 @@
 import { useState, useEffect } from "react";
 import { useParams} from "react-router-dom";
-import { fetchDetails, imagePath, imagePathOriginal, fetchCredits, fetchVideos, fetchRecommendations } from "../services/api/tmdb.js";
+import { fetchDetails, imagePath, imagePathOriginal, fetchCredits, fetchVideos, fetchRecommendations, fetchKeywords } from "../services/api/tmdb.js";
 import { Flex, Spinner,Text, Box, Container, Badge, Button, Image, CircularProgress, CircularProgressLabel, Heading} from "@chakra-ui/react";
 import { CalendarIcon, CheckCircleIcon, SmallAddIcon, TimeIcon } from "@chakra-ui/icons";
 import { ratingToPercentage, resolveRatingColor, fromMinutesToHours } from '../utils/helpers.js'
 import CastComponent from "../components/CastComponent.jsx";
 import VideoComponent from '../components/VideoComponent.jsx';
 import GridComponent from '../components/GridComponent.jsx';
+import RecommendationComponent from '../components/RecommendationComponent.jsx';
+
 
 const DetailsPage = () => {
   const router = useParams();
   const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState({});
+  const [directors, setDirectors] = useState([]);
+  const [keywords, setKeywords] = useState([]);
   const [video, setVideo] = useState(null);
   const [videos, setVideos] = useState([]);
   const { type, id } = router; 
   const [cast, setCast] = useState([]);
   const [data, setData] = useState([]);
-
+  const [watchedMovies, setWatchedMovies] = useState([])
 
 
 
@@ -26,16 +30,21 @@ const DetailsPage = () => {
 
     const fetchData = async () => {
       try{
-        const [detailsData, creditsData, videosData, recomendationsData] = await Promise.all([
+        const [detailsData, creditsData, videosData, recomendationsData, keywordsData] = await Promise.all([
           fetchDetails(type, id),
           fetchCredits(type, id),
           fetchVideos(type, id),
           fetchRecommendations(type, id),
+          fetchKeywords(type, id),
         ]);
 
         setDetails(detailsData);
-        setCast(creditsData.cast.slice(0,10));
-        
+        setCast(creditsData?.cast?.slice(0,10));
+        setDirectors(creditsData?.crew
+          ?.filter((item) => item?.job === 'Director')
+          ?.map((item) => item?.name)
+        );
+
         const video = videosData?.results?.find((video) => video?.type === 'Trailer');
         setVideo(video);
 
@@ -43,6 +52,8 @@ const DetailsPage = () => {
         setVideos(videos);
 
         setData(recomendationsData?.results?.slice(0, 10));
+
+        setKeywords(keywordsData?.keywords?.map((item) => item.name));
 
       } catch (error){
         console.log(error, 'error')
@@ -53,8 +64,8 @@ const DetailsPage = () => {
     };
     fetchData();
 
-  }, [type, id])
-  
+  }, [type, id]);
+
   if (loading) {
     return (
       <Flex justify={'center'}>
@@ -175,7 +186,19 @@ const DetailsPage = () => {
       <Heading as="h2" fontSize={'md'} textTransform={'uppercase'} mt="10" mb="7">
           Recommendations 
       </Heading>
-      <GridComponent data={data} isLoading={loading}/>
+
+      { type === 'tv' && (<GridComponent data={data} isLoading={loading}/>)}
+      { type === 'movie' && 
+          (
+          <RecommendationComponent 
+              watchedMovies={watchedMovies} 
+              directors={directors} 
+              keywords={keywords}
+              details={details}
+              isLoading={loading}
+
+          />
+      )}
 
     </Container>
   </Box>
@@ -184,4 +207,4 @@ const DetailsPage = () => {
   )
 }
 
-export default DetailsPage
+export default DetailsPage;
